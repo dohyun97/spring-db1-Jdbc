@@ -10,9 +10,9 @@ import org.springframework.core.env.Environment;
 public abstract class ConnectionConst {
 
 
-    public static final String URL = "url";
+    public static final String URL = "jdbc:mysql://localhost:3306/app";
 
 
-    public static final String USERNAME = "username";
-    public static final String PW = "pw";
+    public static final String USERNAME = "kimdo";
+    public static final String PW = "Hyun9753!";
 }
