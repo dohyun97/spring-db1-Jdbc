@@ -1,7 +1,6 @@
 package hello.jdbc.service;
 
 import hello.jdbc.domain.Member;
-import hello.jdbc.repository.MemberRepositoryV2;
 import hello.jdbc.repository.MemberRepositoryV3;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,9 +18,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
 /**
- * Transaction -sync connection by transaction manager
+ * Transaction -sync connection by TrasactionTemplate with transaction manager
  */
-class MemberServiceV3_1Test {
+class MemberServiceV3_2Test {
 
     public static final String MEMBER_A = "memberA";
     public static final String MEMBER_B = "memberB";
@@ -29,14 +28,14 @@ class MemberServiceV3_1Test {
 
 
     private MemberRepositoryV3 memberRepository;
-    private MemberServiceV3_1 memberService;
+    private MemberServiceV3_2 memberService;
 
     @BeforeEach
     void beforeEach(){
         DriverManagerDataSource dataSource = new DriverManagerDataSource(URL,USERNAME,PW);
         PlatformTransactionManager transactionManager = new DataSourceTransactionManager(dataSource); //TransactionManager make connection with datasource
         this.memberRepository = new MemberRepositoryV3(dataSource);
-        this.memberService = new MemberServiceV3_1(memberRepository,transactionManager);
+        this.memberService = new MemberServiceV3_2(transactionManager,memberRepository);
     }
 
     @AfterEach

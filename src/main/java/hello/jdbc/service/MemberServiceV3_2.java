@@ -8,29 +8,44 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
-//With Transaction- Transaction Manager
+//With Transaction- TransactionTemplate
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class MemberServiceV3_1 {
+public class MemberServiceV3_2 {
     private final MemberRepositoryV3 memberRepository;
-    private final PlatformTransactionManager transactionManager;
+    private final TransactionTemplate txTemplate;
 
-    public void accountTransfer(String fromId,String toId, int money) throws SQLException {
-        //start transaction. return transaction status
-        TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
-        try {
+    public MemberServiceV3_2(PlatformTransactionManager transactionManager,MemberRepositoryV3 memberRepository) {
+        this.memberRepository = memberRepository;
+        this.txTemplate = new TransactionTemplate(transactionManager);
+    }
 
-           bizLogic(fromId, toId, money);
-           transactionManager.commit(status); //commit when success
-       }catch (Exception e){
-           transactionManager.rollback(status); //rollback when fail
-           throw new IllegalArgumentException(e);
-       }
+    public void accountTransfer(String fromId, String toId, int money) throws SQLException {
+        txTemplate.executeWithoutResult((status)->{
+            try {
+                bizLogic(fromId,toId,money);
+            } catch (SQLException e) {
+                throw new IllegalArgumentException(e);
+            }
+        });
+
+
+
+//        TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
+//        try {
+//
+//           bizLogic(fromId, toId, money);
+//           transactionManager.commit(status); //commit when success
+//       }catch (Exception e){
+//           transactionManager.rollback(status); //rollback when fail
+//           throw new IllegalArgumentException(e);
+//       }
     }
 
     private void bizLogic(String fromId, String toId, int money) throws SQLException {
