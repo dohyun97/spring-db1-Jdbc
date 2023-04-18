@@ -14,7 +14,6 @@ import java.sql.SQLException;
 
 //With Transaction- Transaction Manager
 @Slf4j
-@Service
 @RequiredArgsConstructor
 public class MemberServiceV3_1 {
     private final MemberRepositoryV3 memberRepository;

@@ -6,46 +6,21 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
-//With Transaction- TransactionTemplate
+//With Transaction- @Transaction AOP
 @Slf4j
 @RequiredArgsConstructor
-public class MemberServiceV3_2 {
+public class MemberServiceV3_3 {
     private final MemberRepositoryV3 memberRepository;
-    private final TransactionTemplate txTemplate;
 
-    public MemberServiceV3_2(PlatformTransactionManager transactionManager,MemberRepositoryV3 memberRepository) {
-        this.memberRepository = memberRepository;
-        this.txTemplate = new TransactionTemplate(transactionManager);
-    }
-
+    @Transactional    //이 메소드가 성공적으로 끝나면 커밋, 예외 발생하면 롤백
     public void accountTransfer(String fromId, String toId, int money) throws SQLException {
-        txTemplate.executeWithoutResult((status)->{
-            try {
-                bizLogic(fromId,toId,money);
-            } catch (SQLException e) {
-                throw new IllegalArgumentException(e);
-            }
-        });
-
-
-
-//        TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
-//        try {
-//
-//           bizLogic(fromId, toId, money);
-//           transactionManager.commit(status); //commit when success
-//       }catch (Exception e){
-//           transactionManager.rollback(status); //rollback when fail
-//           throw new IllegalArgumentException(e);
-//       }
-    }
+        bizLogic(fromId,toId,money);
+        }
 
     private void bizLogic(String fromId, String toId, int money) throws SQLException {
         Member fromMember = memberRepository.findById(fromId);
@@ -63,5 +38,5 @@ public class MemberServiceV3_2 {
         }
     }
 
-
+   
 }

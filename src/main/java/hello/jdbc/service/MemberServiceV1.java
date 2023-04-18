@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 //Without Transaction.AutoCommit
-@Service
+
 @RequiredArgsConstructor
 public class MemberServiceV1 {
     private final MemberRepositoryV1 memberRepository;

@@ -13,7 +13,6 @@ import java.sql.SQLException;
 
 //With Transaction- 파라미터로 같은 커넥션 유지, 커넥션 풀을 고려한 autocommit 종료
 @Slf4j
-@Service
 @RequiredArgsConstructor
 public class MemberServiceV2 {
     private final MemberRepositoryV2 memberRepository;
